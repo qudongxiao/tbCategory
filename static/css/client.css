@@ -1,0 +1,7 @@
+body{text-align:center;font-size:14px}
+.form{margin:10px;}
+.result{background-color:#eee;border:1px #ddd solid;margin:10px; text-align:center;color:green;padding:10px}
+input {width:500px;color:blue}
+input ,button{padding:6px; margin-left:6px ;border:1px #ddd solid;}
+button{background-color:blue;color:white}
+button:disabled{background-color:#ccc;color:#999}

@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>淘宝商品类目查询</title>
+		<link href="/static/css/client.css" rel="stylesheet">
+		<script src="/static/js/vue.js"></script>
+		<script src="/static/js/axios.js"></script>
+	</head>
+
+	<body>
+		<div id="app">
+			<div class="form">
+			<p><label>淘宝类目查询：</label><input type="text" placeholder="商品链接或ID" v-model="itemUrl"><button @click="doQuery" :disabled="! itemId">查询</button></p>
+			</div>
+			<div class="result">{{catgory}}</div>
+		</div>
+
+		<script>
+		var vm = new Vue({
+			el:'#app',
+			data:{
+				itemUrl:'',
+				catgory:''
+			},
+			computed:{
+				itemId (){
+					if(/^\d{5,}$/.test(this.itemUrl)){
+						return this.itemUrl
+					}else if( /taobao\.com/.test( this.itemUrl ) && /[?&]id=\d+/.test(this.itemUrl) ){
+						return this.itemUrl.match(/[?&]id=(\d+)/)[1]
+					}else{
+						return ""
+					}
+				}
+			},
+			methods:{
+				doQuery (){
+					const that= this;
+					if(that.itemId==="") { return false}
+
+					axios.post('/api/catgory', {
+							goodsUrl: 'https://item.taobao.com/item.htm?id='+that.itemId
+						}
+					)
+					.then(function(resp){
+						if(resp.data.ret){
+							that.catgory  = resp.data.data.join(">>>")
+						}else{
+							that.catgory  = resp.data.msg
+						}
+					})
+					.catch(function(error){
+					});
+
+				}
+			}
+		});
+
+		</script>
+	</body>
+</html>
